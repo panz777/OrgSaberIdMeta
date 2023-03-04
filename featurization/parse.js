@@ -7,14 +7,14 @@ const utils = require('./utils.js');
 function getSamples(user, replays) {
   const samples = [];
   for (const replay of replays) {
-    if (replay.includes('bsor')) {
+    if (replay.includes('dat')) {
       const file = fs.readFileSync("Z:/beatleader/replays/" + replay);
       try {
         const data = bsor.decode(file.buffer);
         if (data && data.frames && data.frames.length && data.notes && data.notes.length && data.info) {
           const endTime = data.frames[data.frames.length - 1].time;
           for (const note of data.notes) {
-            if (note.noteCutInfo && note.noteCutInfo.speedOK && note.noteCutInfo.directionOK && note.noteCutInfo.saberTypeOK && note.eventTime > 1 && note.eventTime < (endTime - 1)) {
+            if (note.noteCutInfo && note.noteCutInfo.directionOK && note.eventTime > 1 && note.eventTime < (endTime - 1)) {
               let sample = [user];
               sample = sample.concat(features.makeNoteFeatures(note));
               const framesBefore = utils.fastTimeSlice(data.frames, note.eventTime - 1, note.eventTime);
